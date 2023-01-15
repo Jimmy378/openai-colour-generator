@@ -94,15 +94,13 @@ export const App = () => {
           onKeyDown={handleKeyDown}
           onSubmit={generateColours}
         />
-        {!loading && emotion.length > 0 && (
-          <button
-            className="search"
-            onClick={generateColours}
-            disabled={emotion.length < 1 || loading}
-          >
-            <SearchIcon />
-          </button>
-        )}
+        <button
+          className="search"
+          onClick={generateColours}
+          disabled={emotion.length < 1 || loading}
+        >
+          <SearchIcon />
+        </button>
         <button
           className="dropdown"
           disabled={loading}
