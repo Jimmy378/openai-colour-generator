@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
 import "./styles.scss";
+import uniqid from "uniqid";
 
 import SearchIcon from "./images/Search.js";
 import CaretDown from "./images/CaretDown.js";
@@ -10,17 +11,56 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+const Palette = ({ description, loading, colours, id }) => {
+  const [copiedColour, setCopiedColour] = useState("");
+  const [showCopiedColour, setShowCopiedColour] = useState("");
+
+  let timer = useRef(null);
+
+  const copyToClipboard = (value) => {
+    navigator.clipboard.writeText(value);
+    setCopiedColour(value);
+    setShowCopiedColour(true);
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
+    timer.current = setTimeout(() => {
+      setShowCopiedColour(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="palette">
+      <div
+        className={`colours ${loading ? "loading" : ""}`.trim()}
+        disabled={loading}
+      >
+        {Array(5)
+          .fill(0)
+          .map((_, index) => (
+            <div
+              key={`colour-${id}-${index}`}
+              style={{ background: colours[index] || "#eeeeee" }}
+              onClick={() => copyToClipboard(colours[index])}
+              disabled={colours.length === 0}
+            />
+          ))}
+      </div>
+      <p>{description}</p>
+      <div
+        className={`toast ${showCopiedColour ? "on" : "off"}`}
+      >{`${copiedColour} copied to clipboard`}</div>
+    </div>
+  );
+};
+
 export const App = () => {
-  const [colours, setColours] = useState([]);
+  const [palettes, setPalettes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [emotion, setEmotion] = useState("");
   const [dropdownActive, setDropdownActive] = useState(false);
-  const [copiedColour, setCopiedColour] = useState("");
-  const [showCopiedColour, setShowCopiedColour] = useState("");
   const [scheme, setScheme] = useState("Complementary");
   const dropdownRef = useRef(null);
-
-  let timer = useRef(null);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -38,8 +78,14 @@ export const App = () => {
     if (e) {
       e.preventDefault();
     }
-    setColours([]);
     setLoading(true);
+    const id = uniqid();
+    const description = `${scheme} : "${emotion}"`;
+    const newPalettes = [
+      { loading: true, colours: [], id, description },
+      ...palettes,
+    ];
+    setPalettes(newPalettes);
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `A ${scheme} color scheme of 5 HEX codes, describing the statement: "${emotion}"`,
@@ -54,7 +100,13 @@ export const App = () => {
     const newColours = response.data?.choices[0]?.text?.trim();
     const matches = newColours?.match(/#?[0-9A-Fa-f]{6}/g);
     if (matches) {
-      setColours(matches);
+      newPalettes[0] = {
+        loading: false,
+        colours: matches,
+        id,
+        description,
+      };
+      setPalettes(newPalettes);
     }
   };
 
@@ -69,18 +121,6 @@ export const App = () => {
       default:
         break;
     }
-  };
-
-  const copyToClipboard = (value) => {
-    navigator.clipboard.writeText(value);
-    setCopiedColour(value);
-    setShowCopiedColour(true);
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-    timer.current = setTimeout(() => {
-      setShowCopiedColour(false);
-    }, 2000);
   };
 
   return (
@@ -123,24 +163,15 @@ export const App = () => {
             <li onClick={() => setScheme("Tetradic")}>{"Tetradic"}</li>
           </ul>
         )}
-        <div
-          className={`colours ${loading ? "loading" : ""}`.trim()}
-          disabled={loading}
-        >
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <div
-                key={`colour-${index}`}
-                style={{ background: colours[index] || "#eeeeee" }}
-                onClick={() => copyToClipboard(colours[index])}
-                disabled={colours.length === 0}
-              />
-            ))}
-        </div>
-        <div
-          className={`toast ${showCopiedColour ? "on" : "off"}`}
-        >{`${copiedColour} copied to clipboard`}</div>
+        {palettes.map((palette) => (
+          <Palette
+            key={`palette-${palette.id}`}
+            colours={palette.colours}
+            loading={palette.loading}
+            id={palette.id}
+            description={palette.description}
+          />
+        ))}
       </section>
     </main>
   );

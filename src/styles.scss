@@ -32,7 +32,7 @@ button {
 }
 
 main {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,14 +45,15 @@ section {
     width: 100%;
     max-width: 750px;
     position: relative;
+    margin-bottom: 50px;
 }
 
 input,
 .dropdown,
-.colours,
+.palette,
 .toast {
     width: 100%;
-    padding: 0 40px;
+    padding: 0 20px;
     background: white;
     border-radius: 20px;
 }
@@ -64,7 +65,7 @@ input,
 }
 
 input {
-    height: 90px;
+    height: 70px;
     font-family: "Montserrat", sans-serif;
     font-size: 20px;
     border: 3px solid transparent;
@@ -84,9 +85,9 @@ input {
 }
 
 .dropdown {
-    height: 90px;
+    height: 70px;
     margin-top: 20px;
-    padding: 40px;
+    padding: 20px;
     border: none;
     box-shadow: 0 15px 30px rgba(162, 142, 227, 10%);
     cursor: pointer;
@@ -109,7 +110,7 @@ ul {
     overflow: hidden;
     z-index: 10;
     li {
-        padding: 30px 40px;
+        padding: 20px;
         user-select: none;
         border-bottom: 1px solid #f8edff;
         background: white;
@@ -133,11 +134,20 @@ li,
     position: absolute;
     top: 10px;
     right: 10px;
-    height: 70px;
-    width: 70px;
+    height: 50px;
+    width: 50px;
     border-radius: 15px;
     border: none;
-    background: $gradient-bg;
+    background: $gradient-border;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+        transform: scale(0.8);
+        path {
+            stroke: white;
+        }
+    }
     &[disabled] {
         background: rgb(242, 242, 242);
         path {
@@ -146,12 +156,23 @@ li,
     }
 }
 
+.palette {
+    position: relative;
+    margin-top: 20px;
+    padding: 20px;
+    font-size: 16px;
+    box-shadow: 0 20px 40px rgba(162, 142, 227, 25%);
+    p {
+        margin: 0;
+        margin-top: 20px;
+        text-align: center;
+        color: rgba(162, 142, 227, 100%);
+    }
+}
+
 .colours {
     display: flex;
-    margin-top: 20px;
-    padding: 40px;
     gap: 3%;
-    box-shadow: 0 20px 40px rgba(162, 142, 227, 25%);
     > div {
         width: 100%;
         aspect-ratio: 1/1;
@@ -175,8 +196,10 @@ li,
 }
 
 .toast {
-    margin-top: 20px;
-    height: 60px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
