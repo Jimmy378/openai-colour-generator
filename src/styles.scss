@@ -1,0 +1,235 @@
+$gradient-bg: linear-gradient(#f8edff, #e5f0ff);
+$gradient-border: linear-gradient(45deg, #c567ff, #60a2ff);
+
+@keyframes colour-scale {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    background: $gradient-bg;
+    color: #22153e;
+}
+
+button {
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    color: #22153e;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 50px;
+    padding-top: 50px;
+}
+
+section {
+    width: 100%;
+    max-width: 750px;
+    position: relative;
+}
+
+input,
+.dropdown,
+.colours,
+.toast {
+    width: 100%;
+    padding: 0 40px;
+    background: white;
+    border-radius: 20px;
+}
+
+[disabled] {
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+input {
+    height: 90px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    border: 3px solid transparent;
+    box-shadow: 0 15px 30px rgba(162, 142, 227, 10%);
+    color: #261037;
+    position: relative;
+    &::placeholder {
+        color: #c2b6d9;
+    }
+    &:focus {
+        outline: none;
+        border: double 3px transparent;
+        background-image: linear-gradient(white, white), $gradient-border;
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+    }
+}
+
+.dropdown {
+    height: 90px;
+    margin-top: 20px;
+    padding: 40px;
+    border: none;
+    box-shadow: 0 15px 30px rgba(162, 142, 227, 10%);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 30px;
+    user-select: none;
+}
+
+ul {
+    position: absolute;
+    list-style: none;
+    box-shadow: 0 20px 40px rgba(162, 142, 227, 25%);
+    width: 100%;
+    border-radius: 20px;
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    overflow: hidden;
+    z-index: 10;
+    li {
+        padding: 30px 40px;
+        user-select: none;
+        border-bottom: 1px solid #f8edff;
+        background: white;
+    }
+}
+
+.dropdown,
+.search,
+li,
+.colours > div {
+    cursor: pointer;
+    &:hover {
+        filter: brightness(102%);
+    }
+    &:active {
+        filter: brightness(98%);
+    }
+}
+
+.search {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 70px;
+    width: 70px;
+    border-radius: 15px;
+    border: none;
+    background: $gradient-bg;
+    &[disabled] {
+        background: rgb(242, 242, 242);
+        path {
+            stroke: rgb(197, 197, 197);
+        }
+    }
+}
+
+.colours {
+    display: flex;
+    margin-top: 20px;
+    padding: 40px;
+    gap: 3%;
+    box-shadow: 0 20px 40px rgba(162, 142, 227, 25%);
+    > div {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 1000px;
+    }
+    &.loading > div {
+        animation: colour-scale 2s ease-in-out forwards infinite;
+        &:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        &:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        &:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+        &:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+    }
+}
+
+.toast {
+    margin-top: 20px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 15px 30px rgba(162, 142, 227, 10%);
+    user-select: none;
+    transition: all 0.5s ease;
+    &.on {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    &.off {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+h1 {
+    margin: 0;
+    font-family: "Ultra", serif;
+}
+
+p {
+    margin: 20px 0;
+}
+
+@media only screen and (max-width: 600px) {
+    main {
+        padding: 0 20px;
+        padding-top: 20px;
+    }
+    body,
+    input,
+    button {
+        font-size: 16px;
+    }
+
+    input,
+    .dropdown,
+    .colours,
+    .toast {
+        padding: 0 20px;
+    }
+
+    .search {
+        display: none;
+    }
+
+    .colours {
+        padding: 20px;
+    }
+
+    .dropdown,
+    input {
+        height: 70px;
+    }
+}
