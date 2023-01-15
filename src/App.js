@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
 import "./styles.scss";
 import uniqid from "uniqid";
+import hexToRgba from "hex-to-rgba";
 
 import SearchIcon from "./images/Search.js";
 import CaretDown from "./images/CaretDown.js";
@@ -40,7 +41,14 @@ const Palette = ({ description, loading, colours, id }) => {
           .map((_, index) => (
             <div
               key={`colour-${id}-${index}`}
-              style={{ background: colours[index] || "#eeeeee" }}
+              style={{
+                background: colours[index] || "#eeeeee",
+                boxShadow: `0 25px 20px ${
+                  colours[index]
+                    ? hexToRgba(colours[index], "0.15")
+                    : "rgba(255,255,255,0%)"
+                }`,
+              }}
               onClick={() => copyToClipboard(colours[index])}
               disabled={colours.length === 0}
             />
