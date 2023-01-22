@@ -61,7 +61,6 @@ input,
 [disabled] {
     user-select: none;
     pointer-events: none;
-    opacity: 0.75;
 }
 
 input {
@@ -243,10 +242,6 @@ p {
     .colours,
     .toast {
         padding: 0 20px;
-    }
-
-    .search {
-        display: none;
     }
 
     .colours {
